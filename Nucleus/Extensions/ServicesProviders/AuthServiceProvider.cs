@@ -14,7 +14,6 @@ namespace Nucleus.Extensions.ServicesProviders
             var authOptions = configuration.GetSection("AuthOptions").Get<AuthOptions>();
             
             addAuthentication(services, authOptions);
-            services.AddAuthorization();
         }
 
         private static void addAuthentication(IServiceCollection services, AuthOptions authOptions)
@@ -33,7 +32,5 @@ namespace Nucleus.Extensions.ServicesProviders
                     };
                 });
         }
-        
-
     }
 }

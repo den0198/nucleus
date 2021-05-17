@@ -22,9 +22,10 @@ namespace Nucleus
             services.AddAppCors();
             services.AddEntityFrameworkConnectionString(configuration);
             services.AddLogger(configuration);
-            services.AddAppGraphQl();
+            services.AddControllers();
             
             services.AddAuth(configuration);
+            services.AddAppGraphQl();
             services.AddTreatment();
             
         }
@@ -36,9 +37,8 @@ namespace Nucleus
             app.UseAppCors();
             app.UseLogger();
             app.UseException();
-            app.UseAppRouting();
-
             app.UseAuth();
+            app.UseAppRouting();    
         }
     }
 }
