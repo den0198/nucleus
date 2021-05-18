@@ -7,6 +7,5 @@ namespace Nucleus.GraphQlApi.Queries
     
     public class MainQuery
     {
-        public string Test() => "Win";
     }
 }

@@ -9,7 +9,6 @@ namespace Nucleus
 {
     public class Startup
     {
-
         private readonly IConfiguration configuration;
 
         public Startup(IConfiguration configuration)
@@ -19,26 +18,33 @@ namespace Nucleus
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddAppCors();
+            #region Infrostrucrure
+            
+            services.AddCors();
+            services.AddControllers();
             services.AddEntityFrameworkConnectionString(configuration);
             services.AddLogger(configuration);
-            services.AddControllers();
-            
-            services.AddAuth(configuration);
             services.AddAppGraphQl();
-            services.AddTreatment();
+            services.AddAuth(configuration);
             
+            #endregion
+            
+            services.AddTreatment();
         }
 
 
         public static void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            #region Infrostructure
+
             app.UseStaticFiles();
             app.UseAppCors();
             app.UseLogger();
             app.UseException();
             app.UseAuth();
             app.UseAppRouting();    
+
+            #endregion
         }
     }
 }

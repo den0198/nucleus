@@ -9,10 +9,9 @@ namespace Nucleus.GraphQlApi.Queries
     [SuppressMessage("ReSharper", "UnusedMember.Global")]
     
     [ExtendObjectType(typeof(MainQuery))]
-    
+    [Authorize]
     public class UserQuery
     {
-        [Authorize]
         public AccountEntity GetUser () => new AccountEntity(); 
     }
 }

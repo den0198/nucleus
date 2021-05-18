@@ -11,8 +11,7 @@ namespace Nucleus.GraphQlApi.Mutations
     [SuppressMessage("ReSharper", "CA1822")]
     [SuppressMessage("ReSharper", "UnusedMember.Global")]
     
-    [ExtendObjectType(typeof(MainMutation))
-]
+    [ExtendObjectType(typeof(MainMutation))]
     public class AccountMutation
     {
         public async Task<SignInResponse> SignIn([Service] AccountServices service,

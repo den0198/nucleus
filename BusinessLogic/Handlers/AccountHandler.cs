@@ -41,7 +41,8 @@ namespace BusinessLogic.Handlers
             var jwt = new JwtSecurityToken(
                 issuer: authOptions.Issuer,
                 audience: authOptions.Audience,
-                expires: DateTime.Now.AddMinutes(20),
+                claims: identity.Claims,
+                expires: DateTime.Now.AddMinutes(authOptions.Lifetime),
                 signingCredentials: AuthHelper.GetSigningCredentials(authOptions.Key)
             );
             

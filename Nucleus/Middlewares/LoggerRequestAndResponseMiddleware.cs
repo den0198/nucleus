@@ -2,8 +2,10 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using NucLog;
 
+
 namespace Nucleus.Middlewares
 {
+    // ReSharper disable NotAccessedField.Local
     public class LoggerRequestAndResponseMiddleware
     {
         private readonly RequestDelegate requestDelegate;
@@ -17,7 +19,6 @@ namespace Nucleus.Middlewares
 
         public async Task InvokeAsync(HttpContext httpContext)
         {
-            httpContext.Request.EnableBuffering();
             await requestDelegate.Invoke(httpContext);
         }
     }

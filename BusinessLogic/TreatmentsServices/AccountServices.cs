@@ -15,6 +15,7 @@ namespace BusinessLogic.TreatmentsServices
     {
         private readonly AppDbContext appDbContext;
         private readonly IConfiguration configuration;
+        
         private readonly AccountHandler handler;
 
         public AccountServices(AppDbContext appDbContext, IConfiguration configuration)
