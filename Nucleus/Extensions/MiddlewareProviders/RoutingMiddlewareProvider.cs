@@ -10,7 +10,7 @@ namespace Nucleus.Extensions.MiddlewareProviders
                 .UseRouting()
                 .UseEndpoints(endpoints =>
                 {
-                    endpoints.MapGraphQL();
+                    endpoints.MapGraphQL("/");
                 });
         }
     }

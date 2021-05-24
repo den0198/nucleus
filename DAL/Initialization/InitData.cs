@@ -1,9 +1,9 @@
 ﻿using System;
+using System.Linq;
 using DAL.EntityFramework;
 using DAL.Initialization.Seeds;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
-using Models.EntitiesDatabase;
 
 namespace DAL.Initialization
 {
@@ -23,12 +23,15 @@ namespace DAL.Initialization
             
             #region Initials
 
-            context.AccountEntities.AddRange(new AccountSeed().Get());
+            var accountSeed = new AccountSeed().Get();
+            if(!context.AccountEntities.Any(obj => obj.Login == accountSeed.FirstOrDefault().Login))
+                context.AccountEntities.AddRange(accountSeed);
                 
             #endregion
 
             await context.SaveChangesAsync();
 
         }
+        
     }
 }
