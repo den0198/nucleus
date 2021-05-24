@@ -12,11 +12,7 @@ namespace Nucleus.Extensions.ServicesProviders
         {
             services.AddDbContext<AppDbContext>(options =>
             {
-                options.UseSqlServer(configuration.GetConnectionString("Default"),
-                    sqlOptions =>
-                    {
-                        sqlOptions.EnableRetryOnFailure();
-                    });
+                options.UseSqlServer(configuration.GetConnectionString("Default"));
             });
         }
     }
