@@ -8,9 +8,7 @@ namespace DAL.EntityFramework
     public sealed class AppDbContext : IdentityDbContext
     {
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
-        {
-            Database.EnsureCreated();
-        }
+        { }
 
         #region Entities
         

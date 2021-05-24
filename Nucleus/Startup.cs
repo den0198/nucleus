@@ -45,6 +45,8 @@ namespace Nucleus
             app.UseAppRouting();    
 
             #endregion
+
+            app.InitializationDatabase();
         }
     }
 }

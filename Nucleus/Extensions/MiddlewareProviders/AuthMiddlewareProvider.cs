@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Builder;
+using Microsoft.OpenApi.Writers;
 
 namespace Nucleus.Extensions.MiddlewareProviders
 {
