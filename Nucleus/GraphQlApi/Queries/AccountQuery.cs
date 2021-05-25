@@ -1,6 +1,10 @@
 using System.Diagnostics.CodeAnalysis;
+using System.Threading.Tasks;
+using BusinessLogic.TreatmentsServices;
+using HotChocolate;
 using HotChocolate.Types;
-using Models.EntitiesDatabase;
+using Models.Requests;
+using Models.Responses;
 
 namespace Nucleus.GraphQlApi.Queries
 {
@@ -10,6 +14,8 @@ namespace Nucleus.GraphQlApi.Queries
     [ExtendObjectType(typeof(MainQuery))]
     public class AccountQuery
     {
-        public AccountEntity Authorization () => new AccountEntity(); 
+        public async Task<NewTokenResponse> NewToken ([Service] AccountServices service, 
+            NewTokenRequest fullToken) =>
+                await service.NewToken(fullToken); 
     }
 }

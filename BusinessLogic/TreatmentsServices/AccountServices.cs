@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using BusinessLogic.Handlers;
 using DAL.EntityFramework;
@@ -36,11 +37,56 @@ namespace BusinessLogic.TreatmentsServices
 
             var accountBase = (AccountBase) account;
             var authOptions = configuration.GetSection("AuthOptions").Get<AuthOptions>();
-            var tokenBase = handler.GetSignInResponse(accountBase, authOptions);
+                
+            var accessToken = handler.GetAccessToken(accountBase, authOptions);
+            var refreshToken = handler.GetRefreshToken();
+
+            account.RefreshToken = refreshToken;
+            await appDbContext.SaveChangesAsync();
 
             return new SignInResponse
             {
-                Token = tokenBase.Token
+                UserId = account.UserId,
+                AccessToken = accessToken,
+                RefreshToken = refreshToken
+            };
+        }
+
+        public async Task<NewTokenResponse> NewToken(NewTokenRequest request)
+        {
+            var authOptions = configuration.GetSection("AuthOptions").Get<AuthOptions>();
+            var accountInfo = handler.GetAccountInfoByOldToken(request.AccessToken, authOptions);
+
+            if (accountInfo == null)
+                throw new Exception("Access token is invalid");
+            
+            var accountLogin = accountInfo.Claims
+                .Where(_ => _.Type.Contains("email"))
+                .Select(_ => _.Value)
+                .FirstOrDefault();
+            
+
+            var account = await appDbContext.AccountEntities
+                .Where(_ => _.Login == accountLogin && _.RefreshToken == request.RefreshToken)
+                .FirstOrDefaultAsync();
+            
+            if (account == null)
+            {
+                throw new Exception("User is not system");
+            }
+            
+            var accountBase = (AccountBase) account;
+            
+            var accessToken = handler.GetAccessToken(accountBase, authOptions);
+            var refreshToken = handler.GetRefreshToken();
+            
+            account.RefreshToken = refreshToken;
+            await appDbContext.SaveChangesAsync();
+                
+            return new NewTokenResponse
+            {
+                AccessToken = accessToken,
+                RefreshToken = refreshToken
             };
         }
     }

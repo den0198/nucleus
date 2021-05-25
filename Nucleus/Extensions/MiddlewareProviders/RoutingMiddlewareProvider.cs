@@ -6,8 +6,9 @@ namespace Nucleus.Extensions.MiddlewareProviders
     {
         public static void UseAppRouting(this IApplicationBuilder applicationBuilder)
         {
+            applicationBuilder.UseRouting();
+            
             applicationBuilder
-                .UseRouting()
                 .UseEndpoints(endpoints =>
                 {
                     endpoints.MapGraphQL("/");

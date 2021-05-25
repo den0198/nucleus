@@ -28,7 +28,8 @@ namespace Nucleus.Extensions.ServicesProviders
                         ValidAudience = authOptions.Audience,
                         ValidateAudience = true,
                         IssuerSigningKey = AuthHelper.GetIssuerSigningKey(authOptions.Key),
-                        ValidateIssuerSigningKey = true
+                        ValidateIssuerSigningKey = true,
+                        ValidateLifetime = true
                     };
                 });
         }

@@ -24,8 +24,8 @@ namespace Nucleus
             services.AddControllers();
             services.AddEntityFrameworkConnectionString(configuration);
             services.AddLogger(configuration);
-            services.AddAppGraphQl();
             services.AddAuth(configuration);
+            services.AddAppGraphQl();
             
             #endregion
             

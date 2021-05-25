@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Components.Consists;
 using Models.EntitiesDatabase;
 
 namespace DAL.Initialization.Seeds
@@ -10,23 +11,24 @@ namespace DAL.Initialization.Seeds
             {
                 new()
                 {
-                    Login = "admin",
+                    Login = "test1",
                     Password = "admin",
-                    Role = "admin"
+                    Role = RolesConsists.ADMIN
                 },
                 
                 new()
                 {
-                    Login  = "user",
+                    Login  = "test2",
                     Password = "user",
-                    Role = "user"
+                    Role = RolesConsists.USER
+                        
                 },
                 
                 new()
                 {
-                    Login = "guest",
+                    Login = "test3",
                     Password = "guest",
-                    Role = "guest"
+                    Role = RolesConsists.GUEST
                 }
             };
     }
