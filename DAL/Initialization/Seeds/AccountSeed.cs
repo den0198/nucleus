@@ -11,14 +11,14 @@ namespace DAL.Initialization.Seeds
             {
                 new()
                 {
-                    Login = "admin",
+                    Login = "test1",
                     Password = "admin",
                     Role = RolesConsists.ADMIN
                 },
                 
                 new()
                 {
-                    Login  = "user",
+                    Login  = "test2",
                     Password = "user",
                     Role = RolesConsists.USER
                         
@@ -26,7 +26,7 @@ namespace DAL.Initialization.Seeds
                 
                 new()
                 {
-                    Login = "guest",
+                    Login = "test3",
                     Password = "guest",
                     Role = RolesConsists.GUEST
                 }
