@@ -23,9 +23,9 @@ namespace DAL.Initialization
             
             #region Initials
 
-            var accountSeed = new AccountSeed().Get();
+            /*var accountSeed = new AccountSeed().Get();
             if(!context.AccountEntities.Any(obj => obj.Login == accountSeed.FirstOrDefault().Login))
-                context.AccountEntities.AddRange(accountSeed);
+                context.AccountEntities.AddRange(accountSeed);*/
                 
             #endregion
 

@@ -13,7 +13,7 @@ namespace BusinessLogic.Handlers
     public class AccountHandler
     {
         #region SignIn
-
+        
         #region AccessToken
 
         public string GetAccessToken(AccountBase accountBase, AuthOptions authOptions)
@@ -27,8 +27,7 @@ namespace BusinessLogic.Handlers
         private static IEnumerable<Claim> getClaims(AccountBase accountBase) =>
             new List<Claim>()
             {
-                new(ClaimTypes.Role, accountBase.Role),
-                new(ClaimTypes.Email, accountBase.Login)
+                new(ClaimTypes.Email, accountBase.UserName)
             };
 
         private static string buildAndGetJwt(IEnumerable<Claim> claims, AuthOptions authOptions)

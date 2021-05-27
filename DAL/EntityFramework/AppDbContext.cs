@@ -5,14 +5,14 @@ using Models.EntitiesDatabase;
 // ReSharper disable RedundantOverriddenMember
 namespace DAL.EntityFramework
 {
-    public sealed class AppDbContext : IdentityDbContext
+    public sealed class AppDbContext : IdentityDbContext<AccountEntity>
     {
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
         { }
 
         #region Entities
         
-        public DbSet<AccountEntity> AccountEntities { get; set; }
+        
         
         #endregion
         

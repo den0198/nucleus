@@ -9,27 +9,7 @@ namespace DAL.Initialization.Seeds
         public IEnumerable<AccountEntity> Get() =>
             new AccountEntity[]
             {
-                new()
-                {
-                    Login = "test1",
-                    Password = "admin",
-                    Role = RolesConsists.ADMIN
-                },
-                
-                new()
-                {
-                    Login  = "test2",
-                    Password = "user",
-                    Role = RolesConsists.USER
-                        
-                },
-                
-                new()
-                {
-                    Login = "test3",
-                    Password = "guest",
-                    Role = RolesConsists.GUEST
-                }
+               
             };
     }
 }
