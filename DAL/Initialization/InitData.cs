@@ -1,8 +1,8 @@
 ﻿using System;
-using System.Linq;
 using DAL.EntityFramework;
 using DAL.Initialization.Seeds;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace DAL.Initialization
@@ -17,11 +17,22 @@ namespace DAL.Initialization
                 ?.CreateScope();
 
             var context = scope?.ServiceProvider.GetRequiredService<AppDbContext>();
+            var roleManager = scope?.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
 
             if (context == null)
                 throw new Exception("context is null");
+
+            if (roleManager == null)
+                throw new Exception("context roles is null");
             
             #region Initials
+
+            var rolesSeeds = new RoleSeeds().Get();
+            foreach (var identityRole in rolesSeeds)
+            {
+                if (await roleManager.FindByNameAsync(identityRole.Name) == null)
+                    await roleManager.CreateAsync(identityRole);
+            }
 
             /*var accountSeed = new AccountSeed().Get();
             if(!context.AccountEntities.Any(obj => obj.Login == accountSeed.FirstOrDefault().Login))

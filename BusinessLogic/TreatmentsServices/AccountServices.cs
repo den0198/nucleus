@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using BusinessLogic.Handlers;
+using Components.Consists;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Models.AppSettings;
@@ -39,7 +40,9 @@ namespace BusinessLogic.TreatmentsServices
                 
             var accountBase = (AccountBase) account;
             var authOptions = configuration.GetSection("AuthOptions").Get<AuthOptions>();
-                
+            
+            var claim = await userManager.GetClaimsAsync(account);
+
             var accessToken = handler.GetAccessToken(accountBase, authOptions);
             var refreshToken = handler.GetRefreshToken();
 
@@ -95,6 +98,23 @@ namespace BusinessLogic.TreatmentsServices
                 AccessToken = accessToken,
                 RefreshToken = refreshToken
             };
+        }
+
+        public async Task<RegistryUserResponse> RegisterUser(RegistryUserRequest request)
+        {
+            var createAccount = new AccountEntity
+            {
+                UserName = request.Login,
+                Email = request.Email,
+                PhoneNumber = request.PhoneNumber
+            };
+
+            var resultCreateUser = await userManager.CreateAsync(createAccount, request.Password);
+
+            var account = await userManager.FindByNameAsync(createAccount.UserName);
+            await userManager.AddToRoleAsync(account, RolesConsists.USER);
+
+            return new RegistryUserResponse();
         }
     }
 }
