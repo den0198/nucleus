@@ -1,12 +1,12 @@
 using System;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using BusinessLogic.Handlers;
 using Components.Consists;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Models.AppSettings;
-using Models.Bases;
 using Models.EntitiesDatabase;
 using Models.Requests;
 using Models.Responses;
@@ -16,13 +16,16 @@ namespace BusinessLogic.TreatmentsServices
     public class AccountServices
     {
         private readonly UserManager<AccountEntity> userManager;
+        private readonly RoleManager<IdentityRole> roleManager;
         private readonly IConfiguration configuration;
         
         private readonly AccountHandler handler;
 
-        public AccountServices(UserManager<AccountEntity> userManager, IConfiguration configuration)
+        public AccountServices(UserManager<AccountEntity> userManager,
+            RoleManager<IdentityRole> roleManager, IConfiguration configuration)
         {
             this.userManager = userManager;
+            this.roleManager = roleManager;
             this.configuration = configuration;
 
             handler = new AccountHandler();
@@ -37,13 +40,18 @@ namespace BusinessLogic.TreatmentsServices
 
             if (!await userManager.CheckPasswordAsync(account, request.Password))
                 throw new Exception("Login or Password is not correct");
-                
-            var accountBase = (AccountBase) account;
+            
+            var accountRoles = await userManager.GetRolesAsync(account);
             var authOptions = configuration.GetSection("AuthOptions").Get<AuthOptions>();
             
-            var claim = await userManager.GetClaimsAsync(account);
-
-            var accessToken = handler.GetAccessToken(accountBase, authOptions);
+            var claims = await userManager.GetClaimsAsync(account);
+            foreach (var accountRole in accountRoles)
+            {
+                var role = await roleManager.FindByNameAsync(accountRole); 
+                claims.Add(new Claim(ClaimTypes.Role, role.Name));
+            }
+            
+            var accessToken = handler.GetAccessToken(claims, authOptions);
             var refreshToken = handler.GetRefreshToken();
 
             await userManager.RemoveAuthenticationTokenAsync(account, 
@@ -82,10 +90,15 @@ namespace BusinessLogic.TreatmentsServices
             if (account == null)
                 throw new Exception("User is not system");
             
+            var accountRoles = await userManager.GetRolesAsync(account);
+            var claims = await userManager.GetClaimsAsync(account);
+            foreach (var accountRole in accountRoles)
+            {
+                var role = await roleManager.FindByNameAsync(accountRole); 
+                claims.Add(new Claim(ClaimTypes.Role, role.Name));
+            }
             
-            var accountBase = (AccountBase) account;
-            
-            var accessToken = handler.GetAccessToken(accountBase, authOptions);
+            var accessToken = handler.GetAccessToken(claims, authOptions);
             var refreshToken = handler.GetRefreshToken();
             
             await userManager.RemoveAuthenticationTokenAsync(account, 
@@ -111,8 +124,12 @@ namespace BusinessLogic.TreatmentsServices
 
             var resultCreateUser = await userManager.CreateAsync(createAccount, request.Password);
 
+            if (!resultCreateUser.Succeeded)
+                throw new Exception("error register");
+
             var account = await userManager.FindByNameAsync(createAccount.UserName);
             await userManager.AddToRoleAsync(account, RolesConsists.USER);
+            await userManager.AddClaimAsync(account, new Claim(ClaimTypes.Email, account.UserName));
 
             return new RegistryUserResponse();
         }

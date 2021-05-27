@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -16,20 +17,13 @@ namespace BusinessLogic.Handlers
         
         #region AccessToken
 
-        public string GetAccessToken(AccountBase accountBase, AuthOptions authOptions)
+        public string GetAccessToken(IEnumerable<Claim> claims, AuthOptions authOptions)
         {
-            var claims = getClaims(accountBase);
             var token = buildAndGetJwt(claims, authOptions);
 
             return token;
         }
-
-        private static IEnumerable<Claim> getClaims(AccountBase accountBase) =>
-            new List<Claim>()
-            {
-                new(ClaimTypes.Email, accountBase.UserName)
-            };
-
+        
         private static string buildAndGetJwt(IEnumerable<Claim> claims, AuthOptions authOptions)
         {
             var jwt = new JwtSecurityToken(

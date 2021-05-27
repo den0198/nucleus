@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Security.Claims;
 using DAL.EntityFramework;
 using DAL.Initialization.Seeds;
 using Microsoft.AspNetCore.Builder;
@@ -30,8 +31,10 @@ namespace DAL.Initialization
             var rolesSeeds = new RoleSeeds().Get();
             foreach (var identityRole in rolesSeeds)
             {
-                if (await roleManager.FindByNameAsync(identityRole.Name) == null)
-                    await roleManager.CreateAsync(identityRole);
+                if (await roleManager.FindByNameAsync(identityRole.Name) != null) continue;
+                
+                await roleManager.CreateAsync(identityRole);
+                await roleManager.AddClaimAsync(identityRole,new Claim(ClaimTypes.Role,identityRole.Name));
             }
 
             /*var accountSeed = new AccountSeed().Get();
