@@ -16,6 +16,6 @@ namespace Nucleus.GraphQlApi.Queries
     {
         public async Task<NewTokenResponse> NewToken ([Service] AccountServices service, 
             NewTokenRequest fullToken) =>
-                await service.NewToken(fullToken); 
+                await service.NewToken(fullToken);
     }
 }

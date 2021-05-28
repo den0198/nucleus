@@ -14,7 +14,7 @@ namespace Nucleus.GraphQlApi.Queries
     public class UserQuery
     {
         
-        [Authorize(Roles = new []{ RolesConsists.ADMIN, RolesConsists.USER })]
+        [Authorize(Roles = new []{ RolesConsists.USER, RolesConsists.ADMIN })]
         public AccountEntity GetUser () => new AccountEntity(); 
     }
 }

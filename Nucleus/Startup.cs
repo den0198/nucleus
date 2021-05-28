@@ -22,10 +22,10 @@ namespace Nucleus
             
             services.AddCors();
             services.AddControllers();
-            services.AddEntityFrameworkConnectionString(configuration);
-            services.AddLogger(configuration);
             services.AddAuth(configuration);
             services.AddAppGraphQl();
+            services.AddEntityFramework(configuration);
+            services.AddLogger(configuration);
             
             #endregion
             
