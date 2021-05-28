@@ -1,4 +1,5 @@
 using System.Diagnostics.CodeAnalysis;
+using Components.Consists;
 using HotChocolate.AspNetCore.Authorization;
 using HotChocolate.Types;
 using Models.EntitiesDatabase;
@@ -13,7 +14,7 @@ namespace Nucleus.GraphQlApi.Queries
     public class UserQuery
     {
         
-        [Authorize]
+        [Authorize(Roles = new []{ RolesConsists.USER, RolesConsists.ADMIN })]
         public AccountEntity GetUser () => new AccountEntity(); 
     }
 }

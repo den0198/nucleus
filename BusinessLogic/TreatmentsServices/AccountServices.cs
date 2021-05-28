@@ -38,7 +38,7 @@ namespace BusinessLogic.TreatmentsServices
 
             if (account == null)
                 throw new Exception("User not in system");
-
+            
             if (!await userManager.CheckPasswordAsync(account, request.Password))
                 throw new Exception("Login or Password is not correct");
 

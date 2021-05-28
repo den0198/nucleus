@@ -15,9 +15,10 @@ namespace Nucleus.Extensions.ServicesProviders
         {
             var connectionString = configuration.GetConnectionString("Default");
             var authAudience = configuration.GetSection("AuthOptions").Get<AuthOptions>().Audience;
+            var passwordOptions = configuration.GetSection(nameof(PasswordOptions))?.Get<PasswordOptions>();
             
             addConnectionString(services, connectionString);
-            addIdentity(services, authAudience);
+            addIdentity(services, authAudience, passwordOptions);
         }
 
         private static void addConnectionString(IServiceCollection services, string connectionString)
@@ -28,12 +29,15 @@ namespace Nucleus.Extensions.ServicesProviders
             });
         }
 
-        private static void addIdentity(IServiceCollection services, string authAudience)
+        private static void addIdentity(IServiceCollection services, string authAudience, PasswordOptions passwordOptions)
         {
-            services.AddIdentity<AccountEntity, IdentityRole>()
+            services.AddIdentityCore<AccountEntity>(options =>
+                {
+                    options.Password = passwordOptions ?? options.Password;
+                })
+                .AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<AppDbContext>()
                 .AddTokenProvider(authAudience, typeof(DataProtectorTokenProvider<AccountEntity>));
-
         }
     }
 }
