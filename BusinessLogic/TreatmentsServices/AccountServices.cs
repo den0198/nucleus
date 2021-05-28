@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using System.Web;
 using BusinessLogic.Handlers;
 using Components.Consists;
 using Microsoft.AspNetCore.Identity;
@@ -52,7 +53,8 @@ namespace BusinessLogic.TreatmentsServices
             }
             
             var accessToken = handler.GetAccessToken(claims, authOptions);
-            var refreshToken = handler.GetRefreshToken();
+            var refreshToken = await userManager.GenerateUserTokenAsync(account, authOptions.Audience,
+                "RefreshToken");
 
             await userManager.RemoveAuthenticationTokenAsync(account, 
                 authOptions.Audience, "RefreshToken");
@@ -82,9 +84,10 @@ namespace BusinessLogic.TreatmentsServices
 
 
             var account = await userManager.FindByNameAsync(accountLogin);
-
-            if (!await userManager.VerifyUserTokenAsync(account, 
-                authOptions.Audience, "RefreshToken", request.RefreshToken))
+            
+            var isTokenValid = await userManager.VerifyUserTokenAsync(account,
+                authOptions.Audience, "RefreshToken", request.RefreshToken);
+            if (!isTokenValid)
                 throw new Exception("Refresh token is invalid");
             
             if (account == null)

@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Models.AppSettings;
 using Models.EntitiesDatabase;
 
 namespace Nucleus.Extensions.ServicesProviders
@@ -13,9 +14,10 @@ namespace Nucleus.Extensions.ServicesProviders
             (this IServiceCollection services, IConfiguration configuration)
         {
             var connectionString = configuration.GetConnectionString("Default");
+            var authAudience = configuration.GetSection("AuthOptions").Get<AuthOptions>().Audience;
             
             addConnectionString(services, connectionString);
-            addIdentity(services);
+            addIdentity(services, authAudience);
         }
 
         private static void addConnectionString(IServiceCollection services, string connectionString)
@@ -26,10 +28,12 @@ namespace Nucleus.Extensions.ServicesProviders
             });
         }
 
-        private static void addIdentity(IServiceCollection services)
+        private static void addIdentity(IServiceCollection services, string authAudience)
         {
             services.AddIdentity<AccountEntity, IdentityRole>()
-                .AddEntityFrameworkStores<AppDbContext>();
+                .AddEntityFrameworkStores<AppDbContext>()
+                .AddTokenProvider(authAudience, typeof(DataProtectorTokenProvider<AccountEntity>));
+
         }
     }
 }
