@@ -98,10 +98,21 @@ namespace BusinessLogic.TreatmentsServices
                 throw new Exception("error register");
 
             var account = await userManager.FindByNameAsync(createAccount.UserName);
+            
             await userManager.AddToRoleAsync(account, RolesConsists.USER);
             await userManager.AddClaimAsync(account, new Claim(ClaimTypes.Email, account.UserName));
+            
+            var tokenBase = await getTokenBase(account);
 
-            return new RegistryUserResponse();
+            return new RegistryUserResponse
+            {
+                SignInResponse = new SignInResponse
+                {
+                    UserId = account.UserId,
+                    AccessToken = tokenBase.AccessToken,
+                    RefreshToken = tokenBase.RefreshToken
+                }
+            };
         }
 
         private async Task<TokenBase> getTokenBase(AccountEntity account)

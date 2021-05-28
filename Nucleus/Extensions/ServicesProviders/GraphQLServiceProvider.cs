@@ -13,22 +13,20 @@ namespace Nucleus.Extensions.ServicesProviders
             
             addQuery(graphQlServices);
             addMutation(graphQlServices);
+            
             graphQlServices.AddAuthorization();
         }
 
-        private static void addQuery(IRequestExecutorBuilder builder)
-        {
+        private static void addQuery(IRequestExecutorBuilder builder) =>
             builder
                 .AddQueryType<MainQuery>()
                 .AddTypeExtension<UserQuery>()
                 .AddTypeExtension<AccountQuery>();
-        }
+        
 
-        private static void addMutation(IRequestExecutorBuilder builder)
-        {
+        private static void addMutation(IRequestExecutorBuilder builder) =>
             builder
                 .AddMutationType<MainMutation>()
                 .AddTypeExtension<AccountMutation>();
-        }
     }
 }

@@ -31,16 +31,13 @@ namespace DAL.Initialization
             var rolesSeeds = new RoleSeeds().Get();
             foreach (var identityRole in rolesSeeds)
             {
-                if (await roleManager.FindByNameAsync(identityRole.Name) != null) continue;
+                if (await roleManager.FindByNameAsync(identityRole.Name) != null) 
+                    continue;
                 
                 await roleManager.CreateAsync(identityRole);
                 await roleManager.AddClaimAsync(identityRole,new Claim(ClaimTypes.Role,identityRole.Name));
             }
-
-            /*var accountSeed = new AccountSeed().Get();
-            if(!context.AccountEntities.Any(obj => obj.Login == accountSeed.FirstOrDefault().Login))
-                context.AccountEntities.AddRange(accountSeed);*/
-                
+            
             #endregion
 
             await context.SaveChangesAsync();
