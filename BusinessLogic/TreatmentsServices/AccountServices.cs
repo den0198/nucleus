@@ -2,12 +2,12 @@ using System;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using System.Web;
 using BusinessLogic.Handlers;
 using Components.Consists;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Models.AppSettings;
+using Models.Bases;
 using Models.EntitiesDatabase;
 using Models.Requests;
 using Models.Responses;
@@ -41,31 +41,14 @@ namespace BusinessLogic.TreatmentsServices
 
             if (!await userManager.CheckPasswordAsync(account, request.Password))
                 throw new Exception("Login or Password is not correct");
-            
-            var accountRoles = await userManager.GetRolesAsync(account);
-            var authOptions = configuration.GetSection("AuthOptions").Get<AuthOptions>();
-            
-            var claims = await userManager.GetClaimsAsync(account);
-            foreach (var accountRole in accountRoles)
-            {
-                var role = await roleManager.FindByNameAsync(accountRole); 
-                claims.Add(new Claim(ClaimTypes.Role, role.Name));
-            }
-            
-            var accessToken = handler.GetAccessToken(claims, authOptions);
-            var refreshToken = await userManager.GenerateUserTokenAsync(account, authOptions.Audience,
-                "RefreshToken");
 
-            await userManager.RemoveAuthenticationTokenAsync(account, 
-                authOptions.Audience, "RefreshToken");
-            await userManager.SetAuthenticationTokenAsync(account, 
-                authOptions.Audience, "RefreshToken", refreshToken);
+            var tokenBase = await getTokenBase(account);
 
             return new SignInResponse
             {
                 UserId = account.UserId,
-                AccessToken = accessToken,
-                RefreshToken = refreshToken
+                AccessToken = tokenBase.AccessToken,
+                RefreshToken = tokenBase.RefreshToken
             };
         }
 
@@ -81,38 +64,22 @@ namespace BusinessLogic.TreatmentsServices
                 .Where(_ => _.Type.Contains("email"))
                 .Select(_ => _.Value)
                 .FirstOrDefault();
-
-
+            
             var account = await userManager.FindByNameAsync(accountLogin);
+            if (account == null)
+                throw new Exception("User is not system");
             
             var isTokenValid = await userManager.VerifyUserTokenAsync(account,
                 authOptions.Audience, "RefreshToken", request.RefreshToken);
             if (!isTokenValid)
                 throw new Exception("Refresh token is invalid");
             
-            if (account == null)
-                throw new Exception("User is not system");
-            
-            var accountRoles = await userManager.GetRolesAsync(account);
-            var claims = await userManager.GetClaimsAsync(account);
-            foreach (var accountRole in accountRoles)
-            {
-                var role = await roleManager.FindByNameAsync(accountRole); 
-                claims.Add(new Claim(ClaimTypes.Role, role.Name));
-            }
-            
-            var accessToken = handler.GetAccessToken(claims, authOptions);
-            var refreshToken = handler.GetRefreshToken();
-            
-            await userManager.RemoveAuthenticationTokenAsync(account, 
-                authOptions.Audience, "RefreshToken");
-            await userManager.SetAuthenticationTokenAsync(account, 
-                authOptions.Audience, "RefreshToken", refreshToken);
+            var tokenBase = await getTokenBase(account);
                 
             return new NewTokenResponse
             {
-                AccessToken = accessToken,
-                RefreshToken = refreshToken
+                AccessToken = tokenBase.AccessToken,
+                RefreshToken = tokenBase.RefreshToken
             };
         }
 
@@ -135,6 +102,34 @@ namespace BusinessLogic.TreatmentsServices
             await userManager.AddClaimAsync(account, new Claim(ClaimTypes.Email, account.UserName));
 
             return new RegistryUserResponse();
+        }
+
+        private async Task<TokenBase> getTokenBase(AccountEntity account)
+        {
+            var accountRoles = await userManager.GetRolesAsync(account);
+            var authOptions = configuration.GetSection("AuthOptions").Get<AuthOptions>();
+            
+            var claims = await userManager.GetClaimsAsync(account);
+            foreach (var accountRole in accountRoles)
+            {
+                var role = await roleManager.FindByNameAsync(accountRole); 
+                claims.Add(new Claim(ClaimTypes.Role, role.Name));
+            }
+            
+            var accessToken = handler.GetAccessToken(claims, authOptions);
+            var refreshToken = await userManager.GenerateUserTokenAsync(account, authOptions.Audience,
+                "RefreshToken");
+
+            await userManager.RemoveAuthenticationTokenAsync(account, 
+                authOptions.Audience, "RefreshToken");
+            await userManager.SetAuthenticationTokenAsync(account, 
+                authOptions.Audience, "RefreshToken", refreshToken);
+
+            return new TokenBase
+            {
+                AccessToken = accessToken,
+                RefreshToken =  refreshToken
+            };
         }
     }
 }

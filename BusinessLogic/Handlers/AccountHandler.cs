@@ -1,13 +1,10 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
-using System.Security.Cryptography;
 using Components.HelpersClasses;
 using Microsoft.IdentityModel.Tokens;
 using Models.AppSettings;
-using Models.Bases;
 
 namespace BusinessLogic.Handlers
 {
@@ -15,8 +12,6 @@ namespace BusinessLogic.Handlers
     {
         #region SignIn
         
-        #region AccessToken
-
         public string GetAccessToken(IEnumerable<Claim> claims, AuthOptions authOptions)
         {
             var token = buildAndGetJwt(claims, authOptions);
@@ -36,24 +31,6 @@ namespace BusinessLogic.Handlers
             
             return new JwtSecurityTokenHandler().WriteToken(jwt);
         }
-
-        #endregion
-
-        #region RefreshToken
-
-        public string GetRefreshToken() =>
-            generateRefreshToken();
-        
-        private static string generateRefreshToken()
-        {
-            var randomNumber = new byte[32];
-            using var generator = RandomNumberGenerator.Create();
-            
-            generator.GetBytes(randomNumber);
-            return Convert.ToBase64String(randomNumber);
-        }
-
-        #endregion
         
         #endregion
         
