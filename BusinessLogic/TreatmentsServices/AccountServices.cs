@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using BusinessLogic.Handlers;
 using Components.Consists;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
 using Models.AppSettings;
 using Models.Bases;
 using Models.EntitiesDatabase;
@@ -18,16 +18,16 @@ namespace BusinessLogic.TreatmentsServices
     {
         private readonly UserManager<AccountEntity> userManager;
         private readonly RoleManager<IdentityRole> roleManager;
-        private readonly IConfiguration configuration;
+        private readonly AuthOptions authOptions;
         
         private readonly AccountHandler handler;
 
         public AccountServices(UserManager<AccountEntity> userManager,
-            RoleManager<IdentityRole> roleManager, IConfiguration configuration)
+            RoleManager<IdentityRole> roleManager, IOptions<AuthOptions> authOptions)
         {
             this.userManager = userManager;
             this.roleManager = roleManager;
-            this.configuration = configuration;
+            this.authOptions = authOptions.Value;
 
             handler = new AccountHandler();
         }
@@ -54,7 +54,6 @@ namespace BusinessLogic.TreatmentsServices
 
         public async Task<NewTokenResponse> NewToken(NewTokenRequest request)
         {
-            var authOptions = configuration.GetSection("AuthOptions").Get<AuthOptions>();
             var accountInfo = handler.GetAccountInfoByOldToken(request.AccessToken, authOptions);
 
             if (accountInfo == null)
@@ -118,8 +117,7 @@ namespace BusinessLogic.TreatmentsServices
         private async Task<TokenBase> getTokenBase(AccountEntity account)
         {
             var accountRoles = await userManager.GetRolesAsync(account);
-            var authOptions = configuration.GetSection("AuthOptions").Get<AuthOptions>();
-            
+
             var claims = await userManager.GetClaimsAsync(account);
             foreach (var accountRole in accountRoles)
             {

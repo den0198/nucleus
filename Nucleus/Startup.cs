@@ -20,6 +20,7 @@ namespace Nucleus
         {
             #region Infrostrucrure
             
+            services.RegisterAllOptions(configuration);
             services.AddCors();
             services.AddControllers();
             services.AddAuth(configuration);
