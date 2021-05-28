@@ -16,7 +16,10 @@ namespace Nucleus.GraphQlApi.Mutations
     {
         public async Task<SignInResponse> SignIn([Service] AccountServices service,
             SignInRequest account) =>
-                await service.SignIn(account); 
-        
+                await service.SignIn(account);
+
+        public async Task<RegistryUserResponse> RegisterUser([Service] AccountServices service,
+            RegistryUserRequest user) =>
+                await service.RegisterUser(user);
     }
 }
