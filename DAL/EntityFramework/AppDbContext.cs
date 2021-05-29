@@ -11,9 +11,7 @@ namespace DAL.EntityFramework
         { }
 
         #region Entities
-        
-        
-        
+
         #endregion
         
         protected override void OnModelCreating(ModelBuilder modelBuilder)

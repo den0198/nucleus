@@ -10,7 +10,6 @@ namespace Nucleus.GraphQlApi.Queries
     [SuppressMessage("ReSharper", "UnusedMember.Global")]
     
     [ExtendObjectType(typeof(MainQuery))]
-    
     public class UserQuery
     {
         

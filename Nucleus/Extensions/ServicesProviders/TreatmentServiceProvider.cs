@@ -7,7 +7,8 @@ namespace Nucleus.Extensions.ServicesProviders
     {
         public static void AddTreatment(this IServiceCollection services)
         {
-            services.AddScoped<AccountServices>();
+            services.AddScoped<AuthService>();
+            services.AddScoped<UserService>();
         }
     }
 }

@@ -20,13 +20,13 @@ namespace Nucleus
         {
             #region Infrostrucrure
             
-            services.RegisterAllOptions(configuration);
             services.AddCors();
             services.AddControllers();
             services.AddAuth(configuration);
             services.AddAppGraphQl();
             services.AddEntityFramework(configuration);
             services.AddLogger(configuration);
+            services.RegisterAllOptions(configuration);
             
             #endregion
             

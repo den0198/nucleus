@@ -12,9 +12,9 @@ namespace Nucleus.GraphQlApi.Queries
     [SuppressMessage("ReSharper", "UnusedMember.Global")]
     
     [ExtendObjectType(typeof(MainQuery))]
-    public class AccountQuery
+    public class AuthQuery
     {
-        public async Task<NewTokenResponse> NewToken ([Service] AccountServices service, 
+        public async Task<NewTokenResponse> NewToken ([Service] AuthService service, 
             NewTokenRequest fullToken) =>
                 await service.NewToken(fullToken);
     }
