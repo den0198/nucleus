@@ -12,6 +12,8 @@ namespace DAL.EntityFramework
 
         #region Entities
 
+        private DbSet<UserEntity> UsersDetails { get; set; }
+
         #endregion
         
         protected override void OnModelCreating(ModelBuilder modelBuilder)
