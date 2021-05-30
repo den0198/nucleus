@@ -26,6 +26,7 @@ namespace Nucleus
             services.AddAppGraphQl();
             services.AddEntityFramework(configuration);
             services.AddLogger(configuration);
+            services.RegisterAllOptions(configuration);
             
             #endregion
             

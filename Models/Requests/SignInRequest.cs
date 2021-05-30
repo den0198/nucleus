@@ -1,8 +1,8 @@
+using Models.Bases;
+
 namespace Models.Requests
 {
-    public class SignInRequest
+    public class SignInRequest : AuthBase
     {
-        public string Login { get; set; }
-        public string Password { get; set; }
     }
 }

@@ -12,14 +12,11 @@ namespace Nucleus.GraphQlApi.Mutations
     [SuppressMessage("ReSharper", "UnusedMember.Global")]
     
     [ExtendObjectType(typeof(MainMutation))]
-    public class AccountMutation
+    public class AuthMutation
     {
-        public async Task<SignInResponse> SignIn([Service] AccountServices service,
+        public async Task<SignInResponse> SignIn([Service] AuthService service,
             SignInRequest account) =>
                 await service.SignIn(account);
-
-        public async Task<RegistryUserResponse> RegisterUser([Service] AccountServices service,
-            RegistryUserRequest user) =>
-                await service.RegisterUser(user);
+        
     }
 }

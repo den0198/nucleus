@@ -5,6 +5,6 @@ namespace Models.EntitiesDatabase
 {
     public class AccountEntity : AccountBase
     {
-        public Guid UserId { get; set; }
+        public UserEntity User { get; set; }
     }
 }
