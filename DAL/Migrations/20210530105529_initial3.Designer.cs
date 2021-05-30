@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DAL.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20210530060712_initial2")]
-    partial class initial2
+    [Migration("20210530105529_initial3")]
+    partial class initial3
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -200,9 +200,6 @@ namespace DAL.Migrations
                     b.Property<bool>("TwoFactorEnabled")
                         .HasColumnType("bit");
 
-                    b.Property<Guid?>("UserId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<string>("UserName")
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
@@ -217,8 +214,6 @@ namespace DAL.Migrations
                         .HasDatabaseName("UserNameIndex")
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
-                    b.HasIndex("UserId");
-
                     b.ToTable("AspNetUsers");
                 });
 
@@ -227,6 +222,9 @@ namespace DAL.Migrations
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("AccountId")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<int>("Age")
                         .HasColumnType("int");
@@ -242,7 +240,11 @@ namespace DAL.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("UserEntity");
+                    b.HasIndex("AccountId")
+                        .IsUnique()
+                        .HasFilter("[AccountId] IS NOT NULL");
+
+                    b.ToTable("UsersDetails");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -296,12 +298,17 @@ namespace DAL.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("Models.EntitiesDatabase.UserEntity", b =>
+                {
+                    b.HasOne("Models.EntitiesDatabase.AccountEntity", "Account")
+                        .WithOne("User")
+                        .HasForeignKey("Models.EntitiesDatabase.UserEntity", "AccountId");
+
+                    b.Navigation("Account");
+                });
+
             modelBuilder.Entity("Models.EntitiesDatabase.AccountEntity", b =>
                 {
-                    b.HasOne("Models.EntitiesDatabase.UserEntity", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId");
-
                     b.Navigation("User");
                 });
 #pragma warning restore 612, 618

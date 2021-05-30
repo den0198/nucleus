@@ -1,10 +1,9 @@
-﻿using System;
-using Models.Bases;
+﻿using Models.Bases;
 
 namespace Models.EntitiesDatabase
 {
     public class AccountEntity : AccountBase
     {
-        public UserEntity User { get; set; }
+        public virtual UserEntity User { get; set; }
     }
 }

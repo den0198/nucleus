@@ -17,13 +17,16 @@ namespace Nucleus.Extensions.ServicesProviders
             var authOptions = configuration.GetSection("AuthOptions").Get<AuthOptions>();
             var passwordOptions = configuration.GetSection("PasswordOptions").Get<PasswordOptions>();
             
-            addConnectionString(services, connectionString);
+            addOptions(services, connectionString);
             addIdentity(services, authOptions, passwordOptions);
         }
 
-        private static void addConnectionString(IServiceCollection services, string connectionString) =>
+        private static void addOptions(IServiceCollection services, string connectionString) =>
             services.AddDbContext<AppDbContext>(options =>
-                options.UseSqlServer(connectionString));
+            {
+                options.UseLazyLoadingProxies();
+                options.UseSqlServer(connectionString);
+            });
         
 
         private static void addIdentity(IServiceCollection services, AuthOptions authOptions, PasswordOptions passwordOptions) =>
