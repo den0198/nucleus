@@ -3,9 +3,8 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using BusinessLogic.Handlers;
-using Components.Consists;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
 using Models.AppSettings;
 using Models.Bases;
 using Models.EntitiesDatabase;
@@ -14,22 +13,22 @@ using Models.Responses;
 
 namespace BusinessLogic.TreatmentsServices
 {
-    public class AccountServices
+    public class AuthService
     {
         private readonly UserManager<AccountEntity> userManager;
         private readonly RoleManager<IdentityRole> roleManager;
-        private readonly IConfiguration configuration;
+        private readonly AuthOptions authOptions;
         
-        private readonly AccountHandler handler;
+        private readonly AuthHandler handler;
 
-        public AccountServices(UserManager<AccountEntity> userManager,
-            RoleManager<IdentityRole> roleManager, IConfiguration configuration)
+        public AuthService(UserManager<AccountEntity> userManager,
+            RoleManager<IdentityRole> roleManager, IOptions<AuthOptions> authOptions)
         {
             this.userManager = userManager;
             this.roleManager = roleManager;
-            this.configuration = configuration;
+            this.authOptions = authOptions.Value;
 
-            handler = new AccountHandler();
+            handler = new AuthHandler();
         }
         
         public async Task<SignInResponse> SignIn(SignInRequest request)
@@ -46,7 +45,7 @@ namespace BusinessLogic.TreatmentsServices
 
             return new SignInResponse
             {
-                UserId = account.UserId,
+                UserId = account.User.Id,
                 AccessToken = tokenBase.AccessToken,
                 RefreshToken = tokenBase.RefreshToken
             };
@@ -54,7 +53,6 @@ namespace BusinessLogic.TreatmentsServices
 
         public async Task<NewTokenResponse> NewToken(NewTokenRequest request)
         {
-            var authOptions = configuration.GetSection("AuthOptions").Get<AuthOptions>();
             var accountInfo = handler.GetAccountInfoByOldToken(request.AccessToken, authOptions);
 
             if (accountInfo == null)
@@ -82,44 +80,12 @@ namespace BusinessLogic.TreatmentsServices
                 RefreshToken = tokenBase.RefreshToken
             };
         }
-
-        public async Task<RegistryUserResponse> RegisterUser(RegistryUserRequest request)
-        {
-            var createAccount = new AccountEntity
-            {
-                UserName = request.Login,
-                Email = request.Email,
-                PhoneNumber = request.PhoneNumber
-            };
-
-            var resultCreateUser = await userManager.CreateAsync(createAccount, request.Password);
-
-            if (!resultCreateUser.Succeeded)
-                throw new Exception("error register");
-
-            var account = await userManager.FindByNameAsync(createAccount.UserName);
-            
-            await userManager.AddToRoleAsync(account, RolesConsists.USER);
-            await userManager.AddClaimAsync(account, new Claim(ClaimTypes.Email, account.UserName));
-            
-            var tokenBase = await getTokenBase(account);
-
-            return new RegistryUserResponse
-            {
-                SignInResponse = new SignInResponse
-                {
-                    UserId = account.UserId,
-                    AccessToken = tokenBase.AccessToken,
-                    RefreshToken = tokenBase.RefreshToken
-                }
-            };
-        }
+        
 
         private async Task<TokenBase> getTokenBase(AccountEntity account)
         {
             var accountRoles = await userManager.GetRolesAsync(account);
-            var authOptions = configuration.GetSection("AuthOptions").Get<AuthOptions>();
-            
+
             var claims = await userManager.GetClaimsAsync(account);
             foreach (var accountRole in accountRoles)
             {

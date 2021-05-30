@@ -8,8 +8,9 @@ using Models.AppSettings;
 
 namespace BusinessLogic.Handlers
 {
-    public class AccountHandler
+    public class AuthHandler
     {
+        
         #region SignIn
         
         public string GetAccessToken(IEnumerable<Claim> claims, AuthOptions authOptions)
@@ -46,19 +47,19 @@ namespace BusinessLogic.Handlers
             return securityToken is JwtSecurityToken ? accountInfo : null;
         }
 
-        private static TokenValidationParameters getTokenValidationParameters
-            (AuthOptions authOptions) =>
-                new()
-                {
-                    ValidIssuer = authOptions.Issuer,
-                    ValidateIssuer = true,
-                    ValidAudience = authOptions.Audience,
-                    ValidateAudience = true,
-                    IssuerSigningKey = AuthHelper.GetIssuerSigningKey(authOptions.Key),
-                    ValidateIssuerSigningKey = true,
-                    ValidateLifetime = false
-                };
+        private static TokenValidationParameters getTokenValidationParameters (AuthOptions authOptions) =>
+            new()
+            {
+                ValidIssuer = authOptions.Issuer,
+                ValidateIssuer = true,
+                ValidAudience = authOptions.Audience,
+                ValidateAudience = true,
+                IssuerSigningKey = AuthHelper.GetIssuerSigningKey(authOptions.Key),
+                ValidateIssuerSigningKey = true,
+                ValidateLifetime = false
+            };
 
         #endregion
+        
     }
 }

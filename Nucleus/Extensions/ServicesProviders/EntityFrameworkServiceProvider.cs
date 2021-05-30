@@ -14,30 +14,24 @@ namespace Nucleus.Extensions.ServicesProviders
             (this IServiceCollection services, IConfiguration configuration)
         {
             var connectionString = configuration.GetConnectionString("Default");
-            var authAudience = configuration.GetSection("AuthOptions").Get<AuthOptions>().Audience;
-            var passwordOptions = configuration.GetSection(nameof(PasswordOptions))?.Get<PasswordOptions>();
+            var authOptions = configuration.GetSection("AuthOptions").Get<AuthOptions>();
+            var passwordOptions = configuration.GetSection("PasswordOptions").Get<PasswordOptions>();
             
             addConnectionString(services, connectionString);
-            addIdentity(services, authAudience, passwordOptions);
+            addIdentity(services, authOptions, passwordOptions);
         }
 
-        private static void addConnectionString(IServiceCollection services, string connectionString)
-        {
+        private static void addConnectionString(IServiceCollection services, string connectionString) =>
             services.AddDbContext<AppDbContext>(options =>
-            {
-                options.UseSqlServer(connectionString);
-            });
-        }
+                options.UseSqlServer(connectionString));
+        
 
-        private static void addIdentity(IServiceCollection services, string authAudience, PasswordOptions passwordOptions)
-        {
+        private static void addIdentity(IServiceCollection services, AuthOptions authOptions, PasswordOptions passwordOptions) =>
             services.AddIdentityCore<AccountEntity>(options =>
-                {
-                    options.Password = passwordOptions ?? options.Password;
-                })
+                    options.Password = passwordOptions)
                 .AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<AppDbContext>()
-                .AddTokenProvider(authAudience, typeof(DataProtectorTokenProvider<AccountEntity>));
-        }
+                .AddTokenProvider(authOptions.Audience, typeof(DataProtectorTokenProvider<AccountEntity>));
+        
     }
 }

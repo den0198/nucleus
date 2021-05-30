@@ -16,11 +16,9 @@ namespace Nucleus.Extensions.ServicesProviders
             addAuthentication(services, authOptions);
         }
 
-        private static void addAuthentication(IServiceCollection services, AuthOptions authOptions)
-        {
+        private static void addAuthentication(IServiceCollection services, AuthOptions authOptions) =>
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>
-                {
                     options.TokenValidationParameters = new TokenValidationParameters
                     {
                         ValidIssuer = authOptions.Issuer,
@@ -30,8 +28,7 @@ namespace Nucleus.Extensions.ServicesProviders
                         IssuerSigningKey = AuthHelper.GetIssuerSigningKey(authOptions.Key),
                         ValidateIssuerSigningKey = true,
                         ValidateLifetime = true
-                    };
-                });
-        }
+                    });
+        
     }
 }
