@@ -45,7 +45,7 @@ namespace BusinessLogic.TreatmentsServices
 
             return new SignInResponse
             {
-                UserId = account.User.Id,
+                //UserId = account.User.Id,
                 AccessToken = tokenBase.AccessToken,
                 RefreshToken = tokenBase.RefreshToken
             };

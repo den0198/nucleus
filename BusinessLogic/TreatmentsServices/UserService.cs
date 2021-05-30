@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Runtime.CompilerServices;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using BusinessLogic.Handlers;
 using Components.Consists;
 using Microsoft.AspNetCore.Identity;
 using Models.EntitiesDatabase;
@@ -12,19 +14,21 @@ namespace BusinessLogic.TreatmentsServices
     public class UserService
     {
         private readonly UserManager<AccountEntity> userManager;
+        private readonly UserHandler handler;
 
         public UserService(UserManager<AccountEntity> userManager)
         {
             this.userManager = userManager;
+            handler = new UserHandler();
         }
         
         public async Task<RegistryUserResponse> RegisterUser(RegistryUserRequest request)
         {
-            var newAccount = (AccountEntity) request.Account;
-            var newUser = (UserEntity) request.User;
+            var newAccount = handler.GetAccount(request.Account);
+            var newUser =  handler.GetUser(request.User);
             newAccount.User = newUser;
 
-            var resultCreateUser = await userManager.CreateAsync(newAccount, request.Password);
+            var resultCreateUser = await userManager.CreateAsync(newAccount, request.Account.Password);
 
             if (!resultCreateUser.Succeeded)
                 throw new Exception("error register");
