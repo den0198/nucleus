@@ -8,9 +8,9 @@ using Models.Responses;
 
 namespace Nucleus.GraphQlApi.Mutations
 {
-    [SuppressMessage("ReSharper", "CA1822")]
+    [SuppressMessage("ReSharper", @"CA1822")]
     [SuppressMessage("ReSharper", "UnusedMember.Global")]
-    
+
     [ExtendObjectType(typeof(MainMutation))]
     public class UserMutation
     {
