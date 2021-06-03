@@ -1,14 +1,18 @@
 ﻿using System.Collections.Generic;
-using Models.EntitiesDatabase;
+using Models.Bases;
 
 namespace DAL.Initialization.Seeds
 {
     public class AccountSeeds
     {
-        public IEnumerable<AccountEntity> Get() =>
-            new AccountEntity[]
+        public IEnumerable<RegisterUserBase> Get() =>
+            new RegisterUserBase[]
             {
-               
+               new()
+               {
+                   Login = "SuperUser",
+                   Password = "qwe123QWE!@#"
+               }
             };
     }
 }
