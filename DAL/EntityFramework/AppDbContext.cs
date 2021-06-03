@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Models.EntitiesDatabase;
 
-// ReSharper disable RedundantOverriddenMember
+
 namespace DAL.EntityFramework
 {
     public sealed class AppDbContext : IdentityDbContext<AccountEntity>
