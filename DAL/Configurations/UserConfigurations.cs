@@ -8,6 +8,8 @@ namespace DAL.Configurations
     {
         public void Configure(EntityTypeBuilder<UserDetailsEntity> builder)
         {
+            builder
+                .ToTable("UsersDetails");
         }
     }
 }
