@@ -11,7 +11,7 @@ namespace Nucleus.GraphQlApi.Queries
     [ExtendObjectType(typeof(MainQuery))]
     public class UserQuery
     {
-        [Authorize(Roles = new []{ RolesConsists.USER, RolesConsists.ADMIN })]
+        [Authorize]
         public string GetUser () => "gud"; 
     }
 }
