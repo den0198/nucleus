@@ -9,9 +9,9 @@ namespace DAL.Configurations
         public void Configure(EntityTypeBuilder<AccountEntity> builder)
         {
             builder
-                .HasOne(b => b.User)
+                .HasOne(b => b.UserDetails)
                 .WithOne(i => i.Account)
-                .HasForeignKey<UserEntity>(b=> b.AccountId);
+                .HasForeignKey<UserDetailsEntity>(b=> b.AccountId);
         }
     }
 }

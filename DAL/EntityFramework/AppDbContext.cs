@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+﻿using System;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Models.EntitiesDatabase;
 
@@ -12,7 +13,7 @@ namespace DAL.EntityFramework
 
         #region Entities
 
-        private DbSet<UserEntity> UsersDetails { get; set; }
+        private DbSet<UserDetailsEntity> UsersDetails { get; set; }
 
         #endregion
         

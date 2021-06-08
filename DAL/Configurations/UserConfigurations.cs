@@ -4,11 +4,10 @@ using Models.EntitiesDatabase;
 
 namespace DAL.Configurations
 {
-    public class UserConfigurations : IEntityTypeConfiguration<UserEntity>
+    public class UserConfigurations : IEntityTypeConfiguration<UserDetailsEntity>
     {
-        public void Configure(EntityTypeBuilder<UserEntity> builder)
+        public void Configure(EntityTypeBuilder<UserDetailsEntity> builder)
         {
-            builder.ToTable("UsersDetails");
         }
     }
 }

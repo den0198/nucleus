@@ -3,7 +3,7 @@ using Models.Bases;
 
 namespace Models.EntitiesDatabase
 {
-    public class UserEntity : UserBase
+    public class UserDetailsEntity : UserBase
     {
         public Guid Id { get; set; }
         public string AccountId { get; set; }
