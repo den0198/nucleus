@@ -4,6 +4,6 @@ namespace Models.EntitiesDatabase
 {
     public class AccountEntity : AccountBase
     {
-        public virtual UserEntity User { get; set; }
+        public virtual UserDetailsEntity UserDetails { get; set; }
     }
 }

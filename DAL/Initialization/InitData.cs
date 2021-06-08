@@ -64,9 +64,10 @@ namespace DAL.Initialization
                     UserName = account.Login,
                     Email = account.Email,
                     PhoneNumber = account.PhoneNumber,
-                    User =  usersSeeds.FirstOrDefault(user => user.FirstName == account.Login)
+                    UserDetails =  usersSeeds.FirstOrDefault(user => user.FirstName == account.Login)
                 };
                 await userManager.CreateAsync(accountEntity, account.Password);
+
 
                 foreach (var role in rolesSeeds)
                 {

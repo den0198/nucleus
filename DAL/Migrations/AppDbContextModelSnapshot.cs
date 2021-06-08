@@ -215,13 +215,14 @@ namespace DAL.Migrations
                     b.ToTable("AspNetUsers");
                 });
 
-            modelBuilder.Entity("Models.EntitiesDatabase.UserEntity", b =>
+            modelBuilder.Entity("Models.EntitiesDatabase.UserDetailsEntity", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("AccountId")
+                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<int>("Age")
@@ -239,8 +240,7 @@ namespace DAL.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("AccountId")
-                        .IsUnique()
-                        .HasFilter("[AccountId] IS NOT NULL");
+                        .IsUnique();
 
                     b.ToTable("UsersDetails");
                 });
@@ -296,18 +296,20 @@ namespace DAL.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Models.EntitiesDatabase.UserEntity", b =>
+            modelBuilder.Entity("Models.EntitiesDatabase.UserDetailsEntity", b =>
                 {
                     b.HasOne("Models.EntitiesDatabase.AccountEntity", "Account")
-                        .WithOne("User")
-                        .HasForeignKey("Models.EntitiesDatabase.UserEntity", "AccountId");
+                        .WithOne("UserDetails")
+                        .HasForeignKey("Models.EntitiesDatabase.UserDetailsEntity", "AccountId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Account");
                 });
 
             modelBuilder.Entity("Models.EntitiesDatabase.AccountEntity", b =>
                 {
-                    b.Navigation("User");
+                    b.Navigation("UserDetails");
                 });
 #pragma warning restore 612, 618
         }

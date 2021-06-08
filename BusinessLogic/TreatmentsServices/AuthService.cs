@@ -36,7 +36,7 @@ namespace BusinessLogic.TreatmentsServices
             var account = await userManager.FindByNameAsync(request.Login);
 
             if (account == null)
-                throw new Exception("User not in system");
+                throw new Exception("UserDetails not in system");
             
             if (!await userManager.CheckPasswordAsync(account, request.Password))
                 throw new Exception("Login or Password is not correct");
@@ -45,7 +45,7 @@ namespace BusinessLogic.TreatmentsServices
 
             return new SignInResponse
             {
-                UserId = account.User.Id,
+                UserId = account.UserDetails.Id,
                 AccessToken = tokenBase.AccessToken,
                 RefreshToken = tokenBase.RefreshToken
             };
@@ -65,7 +65,7 @@ namespace BusinessLogic.TreatmentsServices
             
             var account = await userManager.FindByNameAsync(accountLogin);
             if (account == null)
-                throw new Exception("User is not system");
+                throw new Exception("UserDetails is not system");
             
             var isTokenValid = await userManager.VerifyUserTokenAsync(account,
                 authOptions.Audience, "RefreshToken", request.RefreshToken);
@@ -89,10 +89,10 @@ namespace BusinessLogic.TreatmentsServices
             var claims = await userManager.GetClaimsAsync(account);
             foreach (var accountRole in accountRoles)
             {
-                var role = await roleManager.FindByNameAsync(accountRole); 
+                var role = await roleManager.FindByNameAsync(accountRole);
                 claims.Add(new Claim(ClaimTypes.Role, role.Name));
             }
-            
+
             var accessToken = handler.GetAccessToken(claims, authOptions);
             var refreshToken = await userManager.GenerateUserTokenAsync(account, authOptions.Audience,
                 "RefreshToken");

@@ -16,7 +16,7 @@ namespace BusinessLogic.Handlers
                 PhoneNumber = accountBase.PhoneNumber,
             };
 
-        public UserEntity GetUser(UserBase userBase) =>
+        public UserDetailsEntity GetUser(UserBase userBase) =>
             new()
             {
                 FirstName = userBase.FirstName,

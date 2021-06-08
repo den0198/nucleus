@@ -5,8 +5,8 @@ namespace DAL.Initialization.Seeds
 {
     public class UserSeed
     {
-        public IEnumerable<UserEntity> Get() =>
-            new UserEntity[]
+        public IEnumerable<UserDetailsEntity> Get() =>
+            new UserDetailsEntity[]
             {
                 new()
                 {
