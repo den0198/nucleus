@@ -25,7 +25,7 @@ namespace BusinessLogic.TreatmentsServices
         {
             var newAccount = handler.GetAccount(request.Account);
             var newUser =  handler.GetUser(request.User);
-            newAccount.User = newUser;
+            newAccount.UserDetails = newUser;
 
             var resultCreateUser = await userManager.CreateAsync(newAccount, request.Account.Password);
 
@@ -42,7 +42,7 @@ namespace BusinessLogic.TreatmentsServices
             {
                 SignInResponse = new SignInResponse
                 {
-                    UserId = newAccount.User.Id
+                    UserId = newAccount.UserDetails.Id
                 }
             };
         }
