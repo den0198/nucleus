@@ -222,6 +222,7 @@ namespace DAL.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("AccountId")
+                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<int>("Age")
@@ -239,8 +240,7 @@ namespace DAL.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("AccountId")
-                        .IsUnique()
-                        .HasFilter("[AccountId] IS NOT NULL");
+                        .IsUnique();
 
                     b.ToTable("UsersDetails");
                 });
@@ -300,7 +300,9 @@ namespace DAL.Migrations
                 {
                     b.HasOne("Models.EntitiesDatabase.AccountEntity", "Account")
                         .WithOne("UserDetails")
-                        .HasForeignKey("Models.EntitiesDatabase.UserDetailsEntity", "AccountId");
+                        .HasForeignKey("Models.EntitiesDatabase.UserDetailsEntity", "AccountId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Account");
                 });

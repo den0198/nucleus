@@ -11,7 +11,7 @@ namespace DAL.Configurations
             builder
                 .HasOne(b => b.UserDetails)
                 .WithOne(i => i.Account)
-                .HasForeignKey<UserDetailsEntity>(b=> b.AccountId);
+                .HasForeignKey<UserDetailsEntity>(i => i.AccountId);
         }
     }
 }

@@ -1,5 +1,4 @@
-﻿using System;
-using Models.Bases;
+﻿using Models.Bases;
 
 namespace Models.EntitiesDatabase
 {
