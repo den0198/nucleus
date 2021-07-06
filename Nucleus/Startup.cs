@@ -26,7 +26,8 @@ namespace Nucleus
             services.AddAppGraphQl();
             services.AddEntityFramework(configuration);
             services.AddLogger(configuration);
-            services.RegisterAllOptions(configuration);
+            services.AddAllOptions(configuration);
+            services.AddResponseCompression(options=>options.EnableForHttps = true);
             
             #endregion
             
@@ -37,13 +38,15 @@ namespace Nucleus
         public static void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             #region Infrostructure
-
+            
+            app.UseResponseCompression();
             app.UseStaticFiles();
             app.UseAppCors();
             app.UseLogger();
             app.UseException();
             app.UseAuth();
-            app.UseAppRouting();    
+            app.UseAppRouting();
+            
 
             #endregion
 

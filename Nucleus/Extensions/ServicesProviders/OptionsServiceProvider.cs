@@ -6,7 +6,7 @@ namespace Nucleus.Extensions.ServicesProviders
 {
     public static class OptionsServiceProvider
     {
-        public static void RegisterAllOptions(this IServiceCollection services, IConfiguration configuration)
+        public static void AddAllOptions(this IServiceCollection services, IConfiguration configuration)
         {
             services.Configure<AuthOptions>(configuration.GetSection("AuthOptions"));
         }

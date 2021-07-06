@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using BusinessLogic.TreatmentsServices;
 using HotChocolate;
 using HotChocolate.Types;
+using Models.Bases;
 using Models.Requests;
 using Models.Responses;
 
@@ -14,7 +15,7 @@ namespace Nucleus.GraphQlApi.Mutations
     [ExtendObjectType(typeof(MainMutation))]
     public class UserMutation
     {
-         public async Task<RegistryUserResponse> RegisterUser([Service] UserService service,
+         public async Task<ResponseBase<RegisterUserResponse>> RegisterUser([Service] UserService service,
             RegistryUserRequest user) =>
                 await service.RegisterUser(user);
     }
